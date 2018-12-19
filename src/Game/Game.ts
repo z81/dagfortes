@@ -101,55 +101,94 @@ export class Game {
     );
   }
 
+  private renderCharacter = () => {
+    const character = this.player.char;
+    const { width, height } = this.canvas;
+
+    this.renderer.renderSprite(character.getSprite(), width / 2, height / 2);
+  };
+
   private render = () => {
     const character = this.player.char;
+    const { context, width, height } = this.canvas;
+    const hearthDrawWidth = 125;
 
     SpriteAnimation.beforeRender();
     character.beforeRender();
 
-    this.canvas.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.canvas.context.fillStyle = "#05012b";
+    // clear
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#05012b";
 
-    this.map.layers.forEach(({ map }) => {
-      // Todo: for of
+    // render map
+    const mapOffsetX = this.mapRenderOffset.x;
+    const mapOffsetY = this.mapRenderOffset.y;
+    const gridSize = this.gridSize;
+
+    this.map.layers.forEach(({ map }, zLevel) => {
       map.forEach((row, x: number) => {
-        if (x <= -this.mapRenderOffset.x + character.x - this.gridSize) return;
-        if (x >= -this.mapRenderOffset.x + character.x + this.canvas.width)
-          return;
+        if (x <= -mapOffsetX + character.x - gridSize) return;
+        if (x >= -mapOffsetX + character.x + width) return;
 
         row.forEach(({ tile }, y: number) => {
-          if (y <= -this.mapRenderOffset.y + character.y - this.gridSize)
-            return;
-          if (y >= -this.mapRenderOffset.y + character.y + this.canvas.height)
-            return;
+          if (y <= -mapOffsetY + character.y - gridSize) return;
+          if (y >= -mapOffsetY + character.y + height) return;
 
-          const px = Math.round(x + this.mapRenderOffset.x - character.x);
-          const py = Math.round(y + this.mapRenderOffset.y - character.y);
+          const px = Math.round(x + mapOffsetX - character.x);
+          const py = Math.round(y + mapOffsetY - character.y);
+
+          if (zLevel === 2) {
+            // const tilePosX = Math.round(x + mapOffsetX);
+            // const characterPosX = Math.round(character.x / this.gridSize);
+            // const tilePosY = Math.round(y + mapOffsetY);
+            // const characterPosY = Math.round(character.y / this.gridSize);
+            // console.log(tilePosX, tilePosY);
+            // if (
+            //   Math.abs(tilePosX - characterPosX) <= 0 &&
+            //   Math.abs(tilePosY - characterPosY) <= 0
+            // ) {
+            //   debugger;
+            // }
+          }
+
+          // if (this.isPlayerCollision(px, py)) {
+          //   context.globalAlpha = 0.8;
+          // }
 
           this.renderer.drawTile(tile, px, py);
+          context.globalAlpha = 1;
         });
       });
+
+      if (zLevel === 1) {
+        context.beginPath();
+        // context.globalCompositeOperation = "exclusion";
+        this.renderCharacter();
+      }
     });
 
-    this.renderer.renderSprite(
-      character.getSprite(),
-      this.canvas.width / 2,
-      this.canvas.height / 2
-    );
+    this.renderCharacter();
 
-    this.canvas.context.globalAlpha = 0.8;
-    this.canvas.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.canvas.context.globalAlpha = 1;
+    // context.closePath();
+    // context.globalCompositeOperation = "source-over";
 
-    const hearthDrawWidth = 125;
-    this.canvas.context.drawImage(
+    // render character
+    // this.renderCharacter();
+
+    // render night
+    // context.globalAlpha = 0.8;
+    // context.fillRect(0, 0, width, height);
+    // context.globalAlpha = 1;
+
+    // render hearth
+    context.drawImage(
       this.hearthImage,
       0,
       0,
       hearthDrawWidth,
       45,
-      this.canvas.width - hearthDrawWidth - 10,
-      this.canvas.height - 60,
+      width - hearthDrawWidth - 10,
+      height - 60,
       hearthDrawWidth,
       45
     );
