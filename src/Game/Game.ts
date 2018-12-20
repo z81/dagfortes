@@ -138,22 +138,13 @@ export class Game {
           const py = Math.round(y + mapOffsetY - character.y);
 
           if (zLevel === 2) {
-            // const tilePosX = Math.round(x + mapOffsetX);
-            // const characterPosX = Math.round(character.x / this.gridSize);
-            // const tilePosY = Math.round(y + mapOffsetY);
-            // const characterPosY = Math.round(character.y / this.gridSize);
-            // console.log(tilePosX, tilePosY);
-            // if (
-            //   Math.abs(tilePosX - characterPosX) <= 0 &&
-            //   Math.abs(tilePosY - characterPosY) <= 0
-            // ) {
-            //   debugger;
-            // }
+            if (
+              Math.abs(px - this.canvas.width / 2) < this.gridSize &&
+              Math.abs(py - this.canvas.height / 2) < this.gridSize * 2
+            ) {
+              context.globalAlpha = 0.6;
+            }
           }
-
-          // if (this.isPlayerCollision(px, py)) {
-          //   context.globalAlpha = 0.8;
-          // }
 
           this.renderer.drawTile(tile, px, py);
           context.globalAlpha = 1;
@@ -161,19 +152,9 @@ export class Game {
       });
 
       if (zLevel === 1) {
-        context.beginPath();
-        // context.globalCompositeOperation = "exclusion";
         this.renderCharacter();
       }
     });
-
-    this.renderCharacter();
-
-    // context.closePath();
-    // context.globalCompositeOperation = "source-over";
-
-    // render character
-    // this.renderCharacter();
 
     // render night
     // context.globalAlpha = 0.8;
