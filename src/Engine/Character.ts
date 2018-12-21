@@ -1,27 +1,26 @@
 import { SpriteAnimation, PlayerSkin } from "./";
 
 export enum Direction {
-  Up = 'Up',
-  Down = 'Down',
-  Left = 'Left',
-  Right = 'Right',
+  Up = "Up",
+  Down = "Down",
+  Left = "Left",
+  Right = "Right"
 }
 
 export enum CharStates {
-  Idle = 'idle',
-  walk = 'walk'
+  Idle = "idle",
+  walk = "walk"
 }
-
 
 export class Character {
   public speed = 7.5;
-  private walkLeftAnimation: SpriteAnimation;
-  private walkRightAnimation: SpriteAnimation;
-  private walkUpAnimation: SpriteAnimation;
-  private walkDownAnimation: SpriteAnimation;
+  private walkLeftAnimation!: SpriteAnimation;
+  private walkRightAnimation!: SpriteAnimation;
+  private walkUpAnimation!: SpriteAnimation;
+  private walkDownAnimation!: SpriteAnimation;
   private direction = Direction.Left;
   private state = CharStates.Idle;
-  private position: { x: number, y: number } = { x: 0, y: 0 };
+  private position: { x: number; y: number } = { x: 0, y: 0 };
   private prevRenderTime = 0;
   private beforeMoveCallback = (x: number, y: number): boolean => true;
   private skin: PlayerSkin;
@@ -29,10 +28,10 @@ export class Character {
     walkLeft: () => this.walkLeftAnimation,
     walkRight: () => this.walkRightAnimation,
     walkUp: () => this.walkUpAnimation,
-    walkDown: () => this.walkDownAnimation,
-  }
+    walkDown: () => this.walkDownAnimation
+  };
 
-  constructor({ skin, speed = 7.5 }) {
+  constructor({ skin, speed = 7.5 }: { skin: PlayerSkin; speed: number }) {
     this.skin = skin;
     this.speed = speed;
   }
@@ -40,15 +39,21 @@ export class Character {
   public async loadSkin() {
     await this.skin.load();
 
-    this.walkLeftAnimation = SpriteAnimation.from(this.skin.walkLeftSprite, 0.5);
-    this.walkRightAnimation = SpriteAnimation.from(this.skin.walkRightSprite, 0.5);
+    this.walkLeftAnimation = SpriteAnimation.from(
+      this.skin.walkLeftSprite,
+      0.5
+    );
+    this.walkRightAnimation = SpriteAnimation.from(
+      this.skin.walkRightSprite,
+      0.5
+    );
     this.walkUpAnimation = SpriteAnimation.from(this.skin.walkTopSprite, 0.5);
     this.walkDownAnimation = SpriteAnimation.from(this.skin.walkBotSprite, 0.5);
   }
 
   public getSprite = () => {
     return this.getAnimation().getSprite();
-  }
+  };
 
   public getAnimation = () => {
     if (this.state === CharStates.walk) {
@@ -56,7 +61,7 @@ export class Character {
     } else {
       return this.animations[`walk${this.direction}`]();
     }
-  }
+  };
 
   public setDirection(direction: Direction) {
     this.direction = direction;
@@ -66,7 +71,8 @@ export class Character {
     if (this.direction === Direction.Up) this.direction = Direction.Right;
     else if (this.direction === Direction.Down) this.direction = Direction.Left;
     else if (this.direction === Direction.Left) this.direction = Direction.Up;
-    else if (this.direction === Direction.Right) this.direction = Direction.Down;
+    else if (this.direction === Direction.Right)
+      this.direction = Direction.Down;
   }
 
   public setState(state: CharStates) {
@@ -80,7 +86,7 @@ export class Character {
       } else {
         anim.play();
       }
-    })
+    });
 
     this.state = state;
   }
@@ -126,7 +132,7 @@ export class Character {
     return this.position.y;
   }
 
-  public beforeMoveHook(callback) {
+  public beforeMoveHook(callback: (x: number, y: number) => boolean) {
     this.beforeMoveCallback = callback;
   }
 }

@@ -5,6 +5,7 @@ import { LoadingScreen } from "./LoadingScreen";
 import { loadImage } from "../Engine/utils";
 import { mainAudioTheme, stepSandAudio } from "./Audio";
 import { AssetsLoader } from "./AssetsLoader";
+import { coinSpinAnimation, coinSpinSprite, itemAnimations } from "./Items";
 
 export class Game {
   private gridSize = 32;
@@ -36,7 +37,8 @@ export class Game {
       () => this.map.loadFromUrl("../maps/main.json"),
       () => this.player.loadSkin(),
       () => mainAudioTheme.load(),
-      () => stepSandAudio.load()
+      () => stepSandAudio.load(),
+      () => coinSpinSprite.load()
     );
 
     assetLoader
@@ -67,6 +69,7 @@ export class Game {
     const start = () => {
       this.loadingScreen.hide();
       mainAudioTheme.play();
+      coinSpinAnimation.play();
       requestAnimationFrame(this.render);
       document.removeEventListener("click", start);
     };
@@ -108,6 +111,13 @@ export class Game {
     this.renderer.renderSprite(character.getSprite(), width / 2, height / 2);
   };
 
+  private renderItem = (x: number, y: number, name: string) =>
+    this.renderer.renderSprite(
+      itemAnimations.get(name)!.getSprite(),
+      x + this.mapRenderOffset.x - this.player.char.x,
+      y + this.mapRenderOffset.y - this.player.char.y
+    );
+
   private render = () => {
     const character = this.player.char;
     const { context, width, height } = this.canvas;
@@ -137,13 +147,12 @@ export class Game {
           const px = Math.round(x + mapOffsetX - character.x);
           const py = Math.round(y + mapOffsetY - character.y);
 
-          if (zLevel === 2) {
-            if (
-              Math.abs(px - this.canvas.width / 2) < this.gridSize &&
-              Math.abs(py - this.canvas.height / 2) < this.gridSize * 2
-            ) {
-              context.globalAlpha = 0.6;
-            }
+          if (
+            zLevel === 2 &&
+            Math.abs(px - this.canvas.width / 2) < this.gridSize &&
+            Math.abs(py - this.canvas.height / 2) < this.gridSize * 2
+          ) {
+            context.globalAlpha = 0.6;
           }
 
           this.renderer.drawTile(tile, px, py);
@@ -153,6 +162,12 @@ export class Game {
 
       if (zLevel === 1) {
         this.renderCharacter();
+      }
+    });
+
+    this.map.items.forEach(({ type, x, y }) => {
+      if (type !== "") {
+        this.renderItem(x, y, type);
       }
     });
 
