@@ -6,6 +6,7 @@ import { loadImage } from "../Engine/utils";
 import { mainAudioTheme, stepSandAudio } from "./Audio";
 import { AssetsLoader } from "./AssetsLoader";
 import { coinSpinAnimation, coinSpinSprite, itemAnimations } from "./Items";
+import { Clouds } from "./Clouds";
 
 export class Game {
   private gridSize = 32;
@@ -14,6 +15,7 @@ export class Game {
   private map: GameMap = new GameMap();
   private player: Player = new Player();
   private hearthImage!: HTMLImageElement;
+  private clouds!: Clouds;
   private loadingScreen = new LoadingScreen();
   private canvasSize = {
     width: this.gridSize * 20,
@@ -38,7 +40,8 @@ export class Game {
       () => this.player.loadSkin(),
       () => mainAudioTheme.load(),
       () => stepSandAudio.load(),
-      () => coinSpinSprite.load()
+      () => coinSpinSprite.load(),
+      () => this.clouds.load()
     );
 
     assetLoader
@@ -54,6 +57,8 @@ export class Game {
   }
 
   private async init() {
+    this.clouds = new Clouds(this.canvas.context);
+
     await this.loadAssets();
 
     this.map.setPacks(mainTiles, mainTiles2, mainTiles3);
@@ -87,7 +92,6 @@ export class Game {
   private isPlayerCollision(x: number, y: number) {
     const cx = this.canvas.width / 2;
     const cy = this.canvas.height / 2;
-    const gridSize = 1; // this.gridSize;
     const realPlayerPosX = -this.mapRenderOffset.x + x + cx;
     const realPlayerPosY = -this.mapRenderOffset.y + y + cy;
 
@@ -175,6 +179,8 @@ export class Game {
     // context.globalAlpha = 0.8;
     // context.fillRect(0, 0, width, height);
     // context.globalAlpha = 1;
+
+    this.clouds.render(-character.x, -character.y);
 
     // render hearth
     context.drawImage(
