@@ -48,8 +48,7 @@ export class Game {
       .add<HTMLImageElement>(() => loadImage("../sprites/heartshealth.png"))[0]
       .then(img => (this.hearthImage = img));
 
-    for (const item of assetLoader.loadAll()) {
-      await item;
+    for await (const item of assetLoader.loadAll()) {
       this.loadingScreen.progress += Math.round(100 / assetLoader.size);
     }
 
