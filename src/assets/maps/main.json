@@ -838,7 +838,7 @@
                  "y":549
                 }, 
                 {
-                 "height":61,
+                 "height":53,
                  "id":37,
                  "name":"",
                  "rotation":0,
@@ -846,7 +846,7 @@
                  "visible":true,
                  "width":32,
                  "x":2176,
-                 "y":608
+                 "y":616
                 }, 
                 {
                  "height":32,
@@ -1452,6 +1452,61 @@
                  "width":10,
                  "x":2059,
                  "y":609.5
+                }, 
+                {
+                 "height":862,
+                 "id":130,
+                 "name":"",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":364,
+                 "x":3332,
+                 "y":386
+                }, 
+                {
+                 "height":752,
+                 "id":131,
+                 "name":"",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":80,
+                 "x":3644,
+                 "y":1250
+                }, 
+                {
+                 "height":32,
+                 "id":132,
+                 "name":"",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":1282,
+                 "x":2364,
+                 "y":1950
+                }, 
+                {
+                 "height":94,
+                 "id":134,
+                 "name":"",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":31.666666666667,
+                 "x":2144,
+                 "y":608.666666666667
+                }, 
+                {
+                 "height":8,
+                 "id":135,
+                 "name":"",
+                 "rotation":0,
+                 "type":"wall",
+                 "visible":true,
+                 "width":31.6667,
+                 "x":2176.16665,
+                 "y":608.333333333333
                 }],
          "offsetx":0,
          "offsety":1,
@@ -1495,7 +1550,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":130,
+ "nextobjectid":136,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.2.1",
