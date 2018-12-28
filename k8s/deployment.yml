@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+    name: gdf
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: gdf
+    template:
+        metadata:
+            labels:
+                app: gdf
+        spec:
+            containers:
+                - name: gdf
+                  image: registry.gitlab.com/z81/sawa.space
+                  ports:
+                      - containerPort: 80

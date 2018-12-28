@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: dgf-ingress
+spec:
+    rules:
+        - host: dgf.sawa.space
+          http:
+              paths:
+                  - backend:
+                        serviceName: dgf
+                        servicePort: 80

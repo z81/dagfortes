@@ -4,7 +4,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start": "parcel ./src/index.html"
+    "start": "parcel ./src/index.html",
+    "start": "parcel build ./src/index.html"
   },
   "staticPath": [
     "src/assets"
