@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: dfg
+    name: dgf
     labels:
 spec:
     selector:
-        app: dfg
+        app: dgf
     ports:
         - port: 80
           targetPort: 80
