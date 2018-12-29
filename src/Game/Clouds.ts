@@ -45,22 +45,38 @@ export class Clouds {
     );
   }
 
-  render(x: number, y: number) {
-    this.context.globalAlpha = 1;
+  private drawCloud(x: number, y: number, scale: number) {
+    const { width, height } = this.context.canvas;
+
+    this.drawImage(x, y, 0, 0, scale);
+    this.drawImage(x - width * 1.5, y, 0, 0, scale);
+
+    this.drawImage(x, y - height * 1.5, 0, 0, scale);
+    this.drawImage(x - width * 1.5, y - height * 1.5, 0, 0, scale);
+  }
+
+  private drawShadows(x: number, y: number) {
+    const { width, height } = this.context.canvas;
     this.context.globalCompositeOperation = "difference";
 
-    this.drawImage(x, y, 0, 0, 1);
-    this.drawImage(x - this.context.canvas.width * 1.5, y, 0, 0, 1);
+    this.drawCloud(x, y, 1);
+  }
 
-    this.context.globalAlpha = 1;
+  private drawClouds(x: number, y: number) {
+    const { width, height } = this.context.canvas;
     this.context.globalCompositeOperation = "screen";
 
     for (let i = 0; i < 2; i++) {
-      this.drawImage(x, y, 0, 0, 2);
-      this.drawImage(x - this.context.canvas.width * 1.5, y, 0, 0, 2);
+      this.drawCloud(x, y, 2);
     }
+  }
+
+  render(x: number, y: number) {
+    this.context.globalAlpha = 1;
+
+    this.drawShadows(x, y);
+    this.drawClouds(x, y);
 
     this.context.globalCompositeOperation = "source-over";
-    this.context.globalAlpha = 1;
   }
 }
