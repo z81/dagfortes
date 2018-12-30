@@ -28,6 +28,14 @@ export class Canvas {
     window.addEventListener("resize", this.autoResize);
   }
 
+  public lineTo(x: number, y: number) {
+    this.ctx.lineTo(x, y);
+  }
+
+  public moveTo(x: number, y: number) {
+    this.ctx.moveTo(x, y);
+  }
+
   public get context() {
     return this.ctx;
   }

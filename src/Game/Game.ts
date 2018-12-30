@@ -181,6 +181,47 @@ export class Game {
 
     this.clouds.render(-character.x, -character.y);
 
+    // WIP
+    {
+      const radius = 320;
+      const fogRadiusStart = radius / 5;
+      const fogEndColor = "rgba(0,0,0,1)";
+      const x = width / 2 + this.player.width * 2;
+      const y = height / 2 + this.player.height * 2;
+
+      const grd = context.createRadialGradient(
+        x,
+        y,
+        fogRadiusStart,
+        x,
+        y,
+        radius
+      );
+      grd.addColorStop(0, "transparent");
+      grd.addColorStop(1, fogEndColor);
+
+      context.beginPath();
+      context.fillStyle = fogEndColor;
+      context.rect(0, 0, width, height);
+      context.arc(x, y, radius, 0, 2 * Math.PI);
+      context.fill("evenodd");
+
+      context.fillStyle = grd;
+      context.arc(x, y, radius, 0, 2 * Math.PI);
+      context.fill();
+
+      // this.map.objects.forEach(({ type, x, y, width, height }) => {
+      //   if (type === "wall") {
+      //     const px = Math.round(x + mapOffsetX - character.x);
+      //     const py = Math.round(y + mapOffsetY - character.y);
+      //     context.fillRect(px, py, width, height);
+      //     context.moveTo(px, py);
+      //     context.lineTo(px + 1000, py);
+      //     context.stroke();
+      //   }
+      // });
+    }
+
     // render hearth
     context.drawImage(
       this.hearthImage,

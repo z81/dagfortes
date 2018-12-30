@@ -9,7 +9,7 @@ export class GameMap {
   public layers: ILayer[] = [];
   private tileSetsFirstIds: number[] = [];
   private tailPacks: TilePack[] = [];
-  private objects: IObject[] = [];
+  public objects: IObject[] = [];
   public items: IObject[] = [];
 
   public setPacks(...packs: TilePack[]) {
