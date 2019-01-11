@@ -182,164 +182,163 @@ export class Game {
     this.clouds.render(-character.x, -character.y);
 
     // WIP
-    {
-      const radius = 320;
-      const fogRadiusStart = radius / 5;
-      const fogEndColor = "rgba(0,0,0,1)";
-      const x = width / 2 + this.player.width * 2;
-      const y = height / 2 + this.player.height * 2;
+    // {
+    //   const radius = 320;
+    //   const fogRadiusStart = radius / 5;
+    //   const fogEndColor = "rgba(0,0,0,1)";
+    //   const x = width / 2 + this.player.width * 2;
+    //   const y = height / 2 + this.player.height * 2;
 
-      const grd = context.createRadialGradient(
-        x,
-        y,
-        fogRadiusStart,
-        x,
-        y,
-        radius
-      );
-      grd.addColorStop(0, "transparent");
-      grd.addColorStop(1, fogEndColor);
+    //   const grd = context.createRadialGradient(
+    //     x,
+    //     y,
+    //     fogRadiusStart,
+    //     x,
+    //     y,
+    //     radius
+    //   );
+    //   grd.addColorStop(0, "transparent");
+    //   grd.addColorStop(1, fogEndColor);
 
-      context.beginPath();
-      context.fillStyle = fogEndColor;
-      context.rect(0, 0, width, height);
-      context.arc(x, y, radius, 0, 2 * Math.PI);
-      context.fill("evenodd");
+    //   context.beginPath();
+    //   context.fillStyle = fogEndColor;
+    //   context.rect(0, 0, width, height);
+    //   context.arc(x, y, radius, 0, 2 * Math.PI);
+    //   context.fill("evenodd");
 
-      context.fillStyle = grd;
-      context.arc(x, y, radius, 0, 2 * Math.PI);
-      context.fill();
+    //   context.fillStyle = grd;
+    //   context.arc(x, y, radius, 0, 2 * Math.PI);
+    //   context.fill();
 
-      const charCenterX = this.canvas.width / 2 + this.player.width * 3;
-      const charCenterY = this.canvas.height / 2 + this.player.height * 12;
+    //   const charCenterX = this.canvas.width / 2 + this.player.width * 3;
+    //   const charCenterY = this.canvas.height / 2 + this.player.height * 12;
 
-      // context.fillRect(charCenterX, charCenterY, 5, 5);
+    //   // context.fillRect(charCenterX, charCenterY, 5, 5);
+    //   context.fillStyle = "black";
 
-      context.fillStyle = "black";
+    //   this.map.objects.forEach(({ type, x, y, width, height }) => {
+    //     if (type === "wall") {
+    //       // const ax = Math.round(x + mapOffsetX - character.x);
+    //       // const ay = Math.round(y + mapOffsetY - character.y);
+    //       // const { zx, zy } = this.getProjectionToCharacter(ax, ay);
 
-      this.map.objects.forEach(({ type, x, y, width, height }) => {
-        if (type === "wall") {
-          // const ax = Math.round(x + mapOffsetX - character.x);
-          // const ay = Math.round(y + mapOffsetY - character.y);
-          // const { zx, zy } = this.getProjectionToCharacter(ax, ay);
+    //       const patches = [
+    //         [x, y], // left top
+    //         [x, y + height], // left bottom
+    //         [x + width, y + height], // right bottom
+    //         [x + width, y] // right top
+    //       ].map(([x, y]) => {
+    //         const ax = Math.round(x + mapOffsetX - character.x);
+    //         const ay = Math.round(y + mapOffsetY - character.y);
 
-          const patches = [
-            [x, y], // left top
-            [x, y + height], // left bottom
-            [x + width, y + height], // right bottom
-            [x + width, y] // right top
-          ].map(([x, y]) => {
-            const ax = Math.round(x + mapOffsetX - character.x);
-            const ay = Math.round(y + mapOffsetY - character.y);
+    //         return {
+    //           ax,
+    //           ay,
+    //           ...this.getProjectionToCharacter(ax, ay)
+    //         };
+    //       });
 
-            return {
-              ax,
-              ay,
-              ...this.getProjectionToCharacter(ax, ay)
-            };
-          });
+    //       const [
+    //         leftTopPoint,
+    //         leftBottomPoint,
+    //         rightBottomPoint,
+    //         rightTopPoint
+    //       ] = patches;
 
-          const [
-            leftTopPoint,
-            leftBottomPoint,
-            rightBottomPoint,
-            rightTopPoint
-          ] = patches;
+    //       const isPointIncludeX =
+    //         charCenterX > leftTopPoint.ax && charCenterX < rightTopPoint.ax;
 
-          const isPointIncludeX =
-            charCenterX > leftTopPoint.ax && charCenterX < rightTopPoint.ax;
+    //       const isPointIncludeY =
+    //         charCenterY > leftTopPoint.ay && charCenterY < rightTopPoint.ay;
 
-          const isPointIncludeY =
-            charCenterY > leftTopPoint.ay && charCenterY < rightTopPoint.ay;
+    //       context.beginPath();
 
-          context.beginPath();
+    //       // context.moveTo(patches[0].ax, patches[0].ay);
 
-          // context.moveTo(patches[0].ax, patches[0].ay);
+    //       // patches.forEach(({ ax, ay, zx, zy }, i) => {
+    //       //   context.lineTo(ax, ay);
+    //       // });
 
-          // patches.forEach(({ ax, ay, zx, zy }, i) => {
-          //   context.lineTo(ax, ay);
-          // });
+    //       // context.lineTo(patches[0].ax, patches[0].ay);
+    //       const points = [];
 
-          // context.lineTo(patches[0].ax, patches[0].ay);
-          const points = [];
+    //       if (!isPointIncludeX && !isPointIncludeY) {
+    //         if (
+    //           (charCenterX > rightTopPoint.ax &&
+    //             charCenterY > rightBottomPoint.ay) ||
+    //           (charCenterX < leftTopPoint.ax &&
+    //             charCenterY < leftBottomPoint.ay)
+    //         ) {
+    //           points.push([rightTopPoint.ax, rightTopPoint.ay]);
+    //           points.push([rightTopPoint.zx, rightTopPoint.zy]);
+    //           points.push([leftBottomPoint.zx, leftBottomPoint.zy]);
+    //           points.push([leftBottomPoint.ax, leftBottomPoint.ay]);
+    //           points.push([leftTopPoint.ax, leftTopPoint.ay]);
+    //           points.push([rightTopPoint.ax, rightTopPoint.ay]);
+    //         }
 
-          if (!isPointIncludeX && !isPointIncludeY) {
-            if (
-              (charCenterX > rightTopPoint.ax &&
-                charCenterY > rightBottomPoint.ay) ||
-              (charCenterX < leftTopPoint.ax &&
-                charCenterY < leftBottomPoint.ay)
-            ) {
-              points.push([rightTopPoint.ax, rightTopPoint.ay]);
-              points.push([rightTopPoint.zx, rightTopPoint.zy]);
-              points.push([leftBottomPoint.zx, leftBottomPoint.zy]);
-              points.push([leftBottomPoint.ax, leftBottomPoint.ay]);
-              points.push([leftTopPoint.ax, leftTopPoint.ay]);
-              points.push([rightTopPoint.ax, rightTopPoint.ay]);
-            }
+    //         if (
+    //           (charCenterX > rightTopPoint.ax &&
+    //             charCenterY < rightTopPoint.ay) ||
+    //           (charCenterX < rightTopPoint.ax &&
+    //             charCenterY > leftBottomPoint.ay)
+    //         ) {
+    //           points.push([leftTopPoint.ax, leftTopPoint.ay]);
+    //           points.push([leftTopPoint.zx, leftTopPoint.zy]);
+    //           points.push([leftBottomPoint.zx, leftBottomPoint.zy]);
+    //           points.push([leftBottomPoint.ax, leftBottomPoint.ay]);
+    //           points.push([leftTopPoint.ax, leftTopPoint.ay]);
+    //         }
+    //       } else {
+    //         if (isPointIncludeX) {
+    //           const isTop = charCenterY > leftTopPoint.ay;
 
-            if (
-              (charCenterX > rightTopPoint.ax &&
-                charCenterY < rightTopPoint.ay) ||
-              (charCenterX < rightTopPoint.ax &&
-                charCenterY > leftBottomPoint.ay)
-            ) {
-              points.push([leftTopPoint.ax, leftTopPoint.ay]);
-              points.push([leftTopPoint.zx, leftTopPoint.zy]);
-              points.push([leftBottomPoint.zx, leftBottomPoint.zy]);
-              points.push([leftBottomPoint.ax, leftBottomPoint.ay]);
-              points.push([leftTopPoint.ax, leftTopPoint.ay]);
-            }
-          } else {
-            if (isPointIncludeX) {
-              const isTop = charCenterY > leftTopPoint.ay;
+    //           const starPoint = isTop ? leftTopPoint : leftBottomPoint;
+    //           const endPoint = isTop ? rightTopPoint : rightBottomPoint;
 
-              const starPoint = isTop ? leftTopPoint : leftBottomPoint;
-              const endPoint = isTop ? rightTopPoint : rightBottomPoint;
+    //           points.push([starPoint.ax, starPoint.ay]);
+    //           points.push([starPoint.zx, starPoint.zy]);
+    //           points.push([endPoint.zx, endPoint.zy]);
+    //           points.push([endPoint.ax, endPoint.ay]);
+    //           points.push([starPoint.ax, starPoint.ay]);
+    //         }
 
-              points.push([starPoint.ax, starPoint.ay]);
-              points.push([starPoint.zx, starPoint.zy]);
-              points.push([endPoint.zx, endPoint.zy]);
-              points.push([endPoint.ax, endPoint.ay]);
-              points.push([starPoint.ax, starPoint.ay]);
-            }
+    //         if (isPointIncludeY) {
+    //           const isRight = charCenterX > leftTopPoint.ax;
 
-            if (isPointIncludeY) {
-              const isRight = charCenterX > leftTopPoint.ax;
+    //           const starPoint = isRight ? rightTopPoint : leftTopPoint;
+    //           const endPoint = isRight ? rightBottomPoint : leftBottomPoint;
 
-              const starPoint = isRight ? rightTopPoint : leftTopPoint;
-              const endPoint = isRight ? rightBottomPoint : leftBottomPoint;
+    //           points.push([starPoint.ax, starPoint.ay]);
+    //           points.push([starPoint.zx, starPoint.zy]);
+    //           points.push([endPoint.zx, endPoint.zy]);
+    //           points.push([endPoint.ax, endPoint.ay]);
+    //           points.push([starPoint.ax, starPoint.ay]);
+    //         }
+    //       }
 
-              points.push([starPoint.ax, starPoint.ay]);
-              points.push([starPoint.zx, starPoint.zy]);
-              points.push([endPoint.zx, endPoint.zy]);
-              points.push([endPoint.ax, endPoint.ay]);
-              points.push([starPoint.ax, starPoint.ay]);
-            }
-          }
+    //       if (points.length > 0) {
+    //         context.moveTo(points[0][0], points[0][1]);
+    //       }
 
-          if (points.length > 0) {
-            context.moveTo(points[0][0], points[0][1]);
-          }
+    //       points.forEach(([x, y], i) => {
+    //         // if (i === 2 && (ax >= charCenterX && ay >= charCenterY)) return;
+    //         // if (i === 1 && ay + height < charCenterY) return;
+    //         // if (i === 3 && ay + height < charCenterY) return;
 
-          points.forEach(([x, y], i) => {
-            // if (i === 2 && (ax >= charCenterX && ay >= charCenterY)) return;
-            // if (i === 1 && ay + height < charCenterY) return;
-            // if (i === 3 && ay + height < charCenterY) return;
+    //         context.lineTo(x, y);
+    //       });
 
-            context.lineTo(x, y);
-          });
+    //       // context.lineTo(patches[0].zx, patches[0].zy);
 
-          // context.lineTo(patches[0].zx, patches[0].zy);
+    //       // patches.forEach(({ zx, zy }, i) => {
+    //       //   context.lineTo(zx, zy);
+    //       // });
 
-          // patches.forEach(({ zx, zy }, i) => {
-          //   context.lineTo(zx, zy);
-          // });
-
-          context.fill();
-        }
-      });
-    }
+    //       context.fill();
+    //     }
+    //   });
+    // }
 
     // render hearth
     context.drawImage(
