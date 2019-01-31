@@ -4,10 +4,10 @@ services:
   sawaspace:
     image: registry.gitlab.com/z81/dgf:latest
     ports:
-      - "6850:80"
+      - "6860:80"
 
     labels:
-      - "traefik.frontend.rule=Path:/"
+      - "traefik.frontend.rule=Host:dgf.sawa.space"
     deploy:
       replicas: 1
       restart_policy:
