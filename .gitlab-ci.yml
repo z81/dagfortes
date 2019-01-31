@@ -1,28 +1,21 @@
-image: edoburu/gitlab-kubernetes-client:kubectl-1.10.2-helm-2.9.0
+image: docker:latest
 
 services:
     - docker:dind
+
+stages:
+  - build
+  - deploy
 
 variables:
     CONTAINER_IMAGE: registry.gitlab.com/$CI_PROJECT_PATH
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
 
-stages:
-    - build
-    - deploy
-
-.anchors:
-    - &KUBELOGIN kubectl config set-cluster cluster --insecure-skip-tls-verify=true --server="$KUBE_URL" &&
-      kubectl config set-credentials cluster --token="$KUBE_TOKEN" && kubectl config set-context cluster --cluster=cluster --user=cluster --namespace="$KUBE_NAMESPACE" &&
-      kubectl config use-context cluster
-
-before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-
 build:
     stage: build
     script:
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
         - docker pull $CONTAINER_IMAGE:latest || true
         - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest ./
         - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
@@ -31,14 +24,17 @@ build:
         - master
 
 deploy:
-    stage: deploy
-    script:
-        - *KUBELOGIN
-        - kubectl apply -f k8s
-        - kubectl set image deployment/$APP_NAME $APP_NAME=$CONTAINER_IMAGE:$CI_BUILD_REF
-        - kubectl rollout status "deployment/$APP_NAME"
-    environment:
-        name: production
-        url: $PROD_URL
-    only:
-        - master
+  stage: deploy
+  image: kroniak/ssh-client:3.6
+  script:
+    - mkdir ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - ssh deployer@$HOST "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com"
+    - ssh deployer@$HOST "rm ~/docker-compose.yml" || true
+    - cat docker-compose.yml | ssh deployer@$HOST "cat > ~/docker-compose.yml" || true
+    - ssh deployer@$HOST "HOST=$DOMAIN docker stack deploy -c ~/docker-compose.yml $SERVICE_NAME --with-registry-auth" || true
+  only:
+    - master
