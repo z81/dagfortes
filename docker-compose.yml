@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   sawaspace:
-    image: registry.gitlab.com/z81/dgf:latest
+    image: registry.gitlab.com/z81/dfortess:latest
     ports:
       - "6860:80"
 
